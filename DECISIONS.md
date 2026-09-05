@@ -82,3 +82,33 @@ Spec: SPEC.md § 2.5
 Decision: Any unknown hash route redirects to /command-center, the same as `/`.
 Rejected: A "not found" page – the spec defines no such page and there are no links to unknown routes.
 Spec: SPEC.md § 2.1
+
+## 2026-09-04 – Batch 2 – What-if edits are not audited
+Decision: Changing a what-if value or resetting it does not write an audit entry and does not advance the clock, because the what-if is explicitly "not saved" and never touches the store's capability data. Selecting a capability or opening the log drawer are navigation, not state changes, and are not logged either.
+Rejected: Logging every keystroke in the what-if inputs – would flood the log with entries about values that were never saved.
+Spec: SPEC.md § 6.1.3, § 4
+
+## 2026-09-04 – Batch 2 – Sync chip wording and the Manual state
+Decision: The sync chip reads "{state} {HH:MM}" (e.g. "Synced 14:37", "Manual 14:10"); when the last sync is older than 30 minutes it reads "Delayed" as a warning chip with "Last sync HH:MM" in muted text beside it. The Manual sync state uses the grey chip (DESIGN.md does not map it). At region scope the chip and the sources popover reflect Vikby sjukhus, whose systems run the regional command centre; the EHR outage chip therefore shows at Vikby and region scope only, other nodes keep their own sync state.
+Rejected: A separate region-wide sync state – there is no such source in the data.
+Spec: SPEC.md § 6.1, DESIGN.md § 1
+
+## 2026-09-04 – Batch 2 – Card actions at other scopes
+Decision: "Show detail" on a card is rendered only when it leads somewhere: a matching capability at the node, or the breakdown popover (Emergency department, Staff on duty). Cards that read "Not available at this node" or "Not shared" have no action. At region scope the network cards' "Show detail" scrolls to the Nodes table, and "Operating theatres (Vikby sjukhus only)" switches the scope to Vikby sjukhus and selects Emergency surgery. For a Home care node the first card is "Home care places" instead of "Acute beds".
+Rejected: A disabled "Show detail" link – DESIGN.md forbids dead links.
+Spec: SPEC.md § 6.1.1, § 2.1
+
+## 2026-09-04 – Batch 2 – Aggregated figures at region scope
+Decision: Network cards sum the displayed figures of nodes whose sharing is not None (staff and ambulances: Full only) and show the summed verified/estimated split; "Last confirmed" shows the oldest time among the summed figures with that figure's source. The sources listed as not shared are named in the confidence line as text only.
+Rejected: Showing the newest time – would hide that part of the figure is stale.
+Spec: SPEC.md § 6.1 (region scope), § 7.1
+
+## 2026-09-04 – Batch 2 – Region bottleneck table gets a Node column
+Decision: At region scope the bottleneck table has a Node column between Rank and Capacity, so ranks 5 (Ekhaga vårdhubb) and 6 (Fältsjukhus Alfa) are attributable; rows are not clickable there because § 6.1.3 is not shown at region scope. At node scope only rows with a matching capability are clickable (Patient transport has none).
+Rejected: Encoding the node in the rank cell ("5 (ekhaga)") – a table column is what the platform does.
+Spec: SPEC.md § 5.4, § 6.1.2
+
+## 2026-09-04 – Batch 2 – Node capability sets
+Decision: Nodes other than Vikby get the capabilities listed in § 5.3 as their own What-limits-what entries (Sjöberga: Acute beds, Intensive care; Ekhaga: Monitored intake; Fältsjukhus Alfa: Field beds). Hemsjukvård Sollentuna has none and shows "No capability data at this node." Ekhaga's Monitored intake unit is "monitored patients can be received".
+Rejected: Showing Vikby's capabilities at every node – wrong figures.
+Spec: SPEC.md § 5.3, § 6.1.3

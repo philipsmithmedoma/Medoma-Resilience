@@ -196,3 +196,80 @@ export const ICON_TINTS = {
   transport: { icon: 'text-teal', tile: 'bg-indigo-light' },
   supplies: { icon: 'text-olive', tile: 'bg-orange-light' },
 } as const;
+
+// ---------------------------------------------------------------------------
+// Tasks whose completion drives a target measure (SPEC.md § 3)
+export const MEASURE_TASKS = {
+  edTriage: 'Set up triage zones',
+  theatresAvailable: 'Stop elective surgery and release theatres',
+  icuFreed: 'Convert post-operative unit to intensive care overflow',
+  wardsOnMirror: 'Switch to operational mirror on all wards',
+} as const;
+
+// ---------------------------------------------------------------------------
+// Command Center strings (SPEC.md § 6.1)
+export const CC = {
+  title: 'Command Center',
+  capacityNow: 'Capacity now',
+  bottlenecks: 'Bottlenecks',
+  whatLimitsWhat: 'What limits what',
+  nodes: 'Nodes',
+  sources: 'Sources',
+  selectNode: 'Select a node to see what limits its capacity.',
+  noCapabilities: 'No capability data at this node.',
+  whatIf: 'What-if',
+  whatIfNotSaved: 'What-if, not saved',
+  reset: 'Reset',
+  limiting: 'Limiting',
+  cards: {
+    acuteBeds: 'Acute beds',
+    homeCarePlaces: 'Home care places',
+    intensiveCare: 'Intensive care',
+    theatres: 'Operating theatres',
+    imaging: 'Imaging',
+    ed: 'Emergency department',
+    staff: 'Staff on duty',
+    transport: 'Transport',
+    network: '(network)',
+    vikbyOnly: 'Vikby sjukhus only',
+  },
+  units: {
+    availableOf: (total: number) => `available of ${total}`,
+    availableOfUsable: (usable: number) => `available of ${usable} usable`,
+    surgeries: (theatres: number) => `surgeries possible now, ${theatres} theatres free`,
+    scanners: (total: number, waiting: number) => `of ${total} CT scanners, ${waiting} waiting`,
+    edSlots: (slots: number) => `of ${slots} slots in use`,
+    ambulances: 'ambulances available',
+    staffBreakdown: (b: { doctors: number; nurses: number; assistantNurses: number; other: number }) =>
+      `${b.doctors} doctors, ${b.nurses} nurses, ${b.assistantNurses} assistant nurses, ${b.other} other`,
+    edBreakdown: (inUse: number, slots: number) => `${inUse} of ${slots} slots in use, ${slots - inUse} free.`,
+  },
+  notSharedBy: (names: string[]) => `${names.join(', ')} not shared`,
+  columns: {
+    rank: 'Rank',
+    node: 'Node',
+    capacity: 'Capacity',
+    limitingResource: 'Limiting resource',
+    impact: 'Impact',
+    wouldUnlock: 'Would unlock',
+    component: 'Component',
+    total: 'Total',
+    available: 'Available',
+    type: 'Type',
+    status: 'Status',
+    acuteBeds: 'Acute beds free / total',
+    intensiveCare: 'Intensive care free / usable',
+    staff: 'Staff on duty',
+    sync: 'Sync',
+    sharing: 'Sharing',
+    lead: 'Lead',
+    place: 'Place',
+    source: 'Source',
+    state: 'State',
+    lastSync: 'Last sync',
+  },
+  objective: (label: string, current: number, target: number, unit: string, due: string) =>
+    `${label}: ${current} / ${target} ${unit}, due ${due}`,
+} as const;
+
+export const AUDIT_COLUMNS = { time: 'Time', actor: 'Actor', action: 'Action', object: 'Object', detail: 'Detail' } as const;

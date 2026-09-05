@@ -58,6 +58,9 @@ export interface Actions {
   nextId: (prefix: string) => string;
   setScope: (scope: NodeId) => void;
   setEhrOutage: (on: boolean) => void;
+  /** What-if overrides never touch capability data and are not logged (they are "not saved"). */
+  setWhatIf: (capabilityId: string, component: string, value: number) => void;
+  clearWhatIf: (capabilityId: string) => void;
   reset: () => void;
 }
 
@@ -120,6 +123,16 @@ export const useStore = create<AppStore>()((set, get) => ({
       logEntry(AUDIT.ehrRestored, 'EHR', 'Vikby sjukhus', SYSTEM_ACTOR);
     }
   },
+
+  setWhatIf: (capabilityId, component, value) =>
+    set((s) => ({ whatIf: { ...s.whatIf, [capabilityId]: { ...(s.whatIf[capabilityId] ?? {}), [component]: value } } })),
+
+  clearWhatIf: (capabilityId) =>
+    set((s) => {
+      const next = { ...s.whatIf };
+      delete next[capabilityId];
+      return { whatIf: next };
+    }),
 
   reset: () => set(initialData()),
 }));
