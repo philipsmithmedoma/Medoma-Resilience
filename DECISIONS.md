@@ -152,3 +152,43 @@ Spec: SPEC.md § 3, § 6.2.3, § 6.3
 Decision: The map fits all nodes on load and re-fits when a node is added; scroll-wheel zoom is off so that scrolling the page does not zoom the map; markers show the node name on hover and name plus free places in the popup. Level chip on the active incident header is grey ("Level 2"); the "Active" chip is blue.
 Rejected: Scroll-wheel zoom – hijacks page scrolling in the three-pane layout.
 Spec: DESIGN.md § 4 Maps, SPEC.md § 6.2.3
+
+## 2026-09-05 – Batch 4 – Quantity is the number nearest before the resource term
+Decision: The parser takes the number (integer or number word) closest before the matched resource stem, falling back to the first number in the text; without a resource match it takes the first number. "Vi har 12 sängar uppe. Saknar syrgas – tio koncentratorer räcker för kvällen." therefore yields 10 Oxygen concentrator, as § 6.4.3 expects, although 12 is the first integer.
+Rejected: "The first integer in the text" read literally – gives 12 for msg-2, contradicting the expected result in the same section.
+Spec: SPEC.md § 6.4.3
+
+## 2026-09-05 – Batch 4 – Audit entries carry a reference to their object
+Decision: `AuditEntry` gains an optional `ref` (the id of the object the entry is about). Request actions set it, the four seeded "Requested" entries reference req-1, req-2, req-4 and req-5, and the request drawer shows the entries whose `ref` is the request's id. The Resources-page message input logs "Sent message" with object Resources.
+Rejected: Matching entries by object text ("Ventilator × 2") – ambiguous once two requests for the same resource and quantity exist.
+Spec: SPEC.md § 6.4.1, § 7.3
+
+## 2026-09-05 – Batch 4 – Request audit wording
+Decision: Creating a request logs action "Requested" with object "{resource} × {quantity}" and detail "To {node}", the same shape as the seeded entries. Transitions log the full spec string as the action ("Accepted request – Ventilator × 2 – to Ekhaga vårdhubb"), with the reject reason, the source node or the ETA in the detail column.
+Rejected: Splitting the spec string over Action/Object/Detail – the spec defines it as one string.
+Spec: SPEC.md § 5.10, § 6.4.1
+
+## 2026-09-05 – Batch 4 – Allocate lists every node that has the resource
+Decision: The "From node" select lists every node that holds a row for the resource as "{node}: {available} available"; nodes with fewer available than the quantity are disabled with "{available} available, {quantity} needed" so the presenter sees why (req-2 for 10 oxygen concentrators cannot be allocated from Vikby's 8). A request that names a from node has it preselected.
+Rejected: Listing only nodes with enough available – an empty select gives no explanation.
+Spec: SPEC.md § 6.4.1, § 7.5
+
+## 2026-09-05 – Batch 4 – Inventory filters and sums
+Decision: Column-header filters are checklists; unticking values narrows the table and unticking the last remaining value resets the filter to all. Rows from nodes whose sharing is Capacity only or None are dimmed, show "Not shared" in Available and dashes elsewhere, and are excluded from the sum row. Notes appear as a tooltip on a dotted-underlined resource name.
+Rejected: Including unshared rows in the sums – would leak figures the node does not share.
+Spec: SPEC.md § 6.4.2
+
+## 2026-09-05 – Batch 4 – Session ids start at 100
+Decision: Ids generated during the session (`req-…`, `node-…`, `task-…`, `channel-…`, `msg-…`) use a counter starting at 100 so they never collide with the seeded ids (req-1…req-5, msg-1…msg-3). Stood-up nodes are recognised by the `node-` prefix.
+Rejected: A separate counter per prefix – the same collision with seeded ids.
+Spec: SPEC.md § 3 (NodeId), § 4
+
+## 2026-09-05 – Batch 4 – Stood-up nodes and status changes
+Decision: A stood-up node starts with acute beds total 0 / free 0 (estimated, Manual, last confirmed = clock), staff on duty 0 and the lead chosen in the dialog (default Eva Lind); the map fits to include it. Setting Operational on a Standing up node applies the § 6.5 formula and stamps lastSync with the clock. Changing status or sharing shows a toast ("Node status changed", "Node sharing changed"). The node detail page keeps the sources list derived from the node's figures; a stood-up node lists Manual.
+Rejected: Prompting for staff on duty in the stand-up dialog – not in the spec's field list.
+Spec: SPEC.md § 6.5
+
+## 2026-09-05 – Batch 4 – "Create request" from messages
+Decision: The prefilled dialog carries a "Suggested" chip and the line "Suggested from the message" until the person creates the request (§ 7.4); the same dialog is used from Requests, From message and channel threads. Messages in channels by anyone other than Eva Lind or System get the link; with the seeded data none exist, as the spec allows.
+Rejected: Auto-creating the request from the message – the system never executes a suggestion by itself.
+Spec: SPEC.md § 6.4.3, § 7.4

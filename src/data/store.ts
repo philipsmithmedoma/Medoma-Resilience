@@ -32,6 +32,8 @@ import { AUDIT, CURRENT_USER, HOME_NODE_ID, SYSTEM_ACTOR } from './vocab';
 import { formatClock, INITIAL_CLOCK } from '@/lib/time';
 import { createIncidentSlice, type IncidentActions } from './store-incident';
 import { createEvacuationSlice, type EvacuationActions } from './store-evacuation';
+import { createResourcesSlice, type ResourcesActions } from './store-resources';
+import { createNetworkSlice, type NetworkActions } from './store-network';
 
 export interface DataState {
   scope: NodeId;
@@ -51,12 +53,12 @@ export interface DataState {
   staff: Staff[];
   messagesFromNodes: Message[];
   whatIf: Record<string, Record<string, number>>;
-  ids: number; // running id counter for objects created during the session
+  ids: number; // running id counter for objects created during the session (starts above the seeded ids)
 }
 
 export interface Actions {
   /** Append an audit entry and advance the clock one minute. Returns the entry id. */
-  logEntry: (action: string, object: string, detail?: string, actor?: string) => string;
+  logEntry: (action: string, object: string, detail?: string, actor?: string, ref?: string) => string;
   nextId: (prefix: string) => string;
   setScope: (scope: NodeId) => void;
   setEhrOutage: (on: boolean) => void;
@@ -66,7 +68,7 @@ export interface Actions {
   reset: () => void;
 }
 
-export type AppStore = DataState & Actions & IncidentActions & EvacuationActions;
+export type AppStore = DataState & Actions & IncidentActions & EvacuationActions & ResourcesActions & NetworkActions;
 
 function clone<T>(value: T): T {
   return structuredClone(value);
@@ -91,7 +93,7 @@ export function initialData(): DataState {
     staff: clone(STAFF),
     messagesFromNodes: clone(MESSAGES_FROM_NODES),
     whatIf: {},
-    ids: 0,
+    ids: 100,
   };
 }
 
@@ -99,6 +101,8 @@ export const useStore = create<AppStore>()((set, get, api) => ({
   ...initialData(),
   ...createIncidentSlice(set, get, api),
   ...createEvacuationSlice(set, get, api),
+  ...createResourcesSlice(set, get, api),
+  ...createNetworkSlice(set, get, api),
 
   nextId: (prefix) => {
     const n = get().ids + 1;
@@ -106,10 +110,10 @@ export const useStore = create<AppStore>()((set, get, api) => ({
     return `${prefix}-${n}`;
   },
 
-  logEntry: (action, object, detail, actor = CURRENT_USER.name) => {
+  logEntry: (action, object, detail, actor = CURRENT_USER.name, ref) => {
     const state = get();
     const id = `log-${state.log.length + 1}-${state.ids + 1}`;
-    const entry: AuditEntry = { id, at: formatClock(state.clock), actor, action, object, detail };
+    const entry: AuditEntry = { id, at: formatClock(state.clock), actor, action, object, detail, ref };
     set({ log: [...state.log, entry], clock: state.clock + 1, ids: state.ids + 1 });
     return id;
   },

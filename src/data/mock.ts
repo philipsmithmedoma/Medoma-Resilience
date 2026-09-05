@@ -537,21 +537,13 @@ export const MESSAGES_FROM_NODES: Message[] = [
 // ---------------------------------------------------------------------------
 // § 5.10 Initial audit log
 export const INITIAL_LOG: AuditEntry[] = [
-  { id: 'log-1', at: '13:10', actor: 'Peter Nord', action: 'Requested', object: 'Wheelchair × 4', detail: 'To Vikby sjukhus, emergency department' },
-  { id: 'log-2', at: '13:30', actor: 'Mats Öberg', action: 'Requested', object: 'Saline 1000 ml × 50', detail: 'To Ekhaga vårdhubb' },
-  { id: 'log-3', at: '13:52', actor: 'Mats Öberg', action: 'Requested', object: 'Ventilator × 2', detail: 'To Ekhaga vårdhubb' },
-  { id: 'log-4', at: '14:05', actor: 'Jonas Vik', action: 'Requested', object: 'Oxygen concentrator × 10', detail: 'To Fältsjukhus Alfa' },
+  { id: 'log-1', at: '13:10', actor: 'Peter Nord', action: 'Requested', object: 'Wheelchair × 4', detail: 'To Vikby sjukhus, emergency department', ref: 'req-5' },
+  { id: 'log-2', at: '13:30', actor: 'Mats Öberg', action: 'Requested', object: 'Saline 1000 ml × 50', detail: 'To Ekhaga vårdhubb', ref: 'req-4' },
+  { id: 'log-3', at: '13:52', actor: 'Mats Öberg', action: 'Requested', object: 'Ventilator × 2', detail: 'To Ekhaga vårdhubb', ref: 'req-1' },
+  { id: 'log-4', at: '14:05', actor: 'Jonas Vik', action: 'Requested', object: 'Oxygen concentrator × 10', detail: 'To Fältsjukhus Alfa', ref: 'req-2' },
   { id: 'log-5', at: '14:20', actor: 'System', action: 'Marked out of service', object: 'CT2', detail: 'Reported by RIS' },
   { id: 'log-6', at: '14:37', actor: 'System', action: 'Sync completed', object: 'EHR', detail: 'Vikby sjukhus' },
 ];
-
-// Audit entries in the initial log are linked to the requests they describe (SPEC.md § 6.4.1 request drawer).
-export const REQUEST_LOG_IDS: Record<string, string[]> = {
-  'req-5': ['log-1'],
-  'req-4': ['log-2'],
-  'req-1': ['log-3'],
-  'req-2': ['log-4'],
-};
 
 // ---------------------------------------------------------------------------
 // § 6.5 Preset sites for standing up nodes

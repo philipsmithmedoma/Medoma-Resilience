@@ -239,6 +239,7 @@ export interface AuditEntry {
   action: string;
   object: string;
   detail?: string;
+  ref?: string; // id of the object the entry is about (e.g. a request), see DECISIONS.md
 }
 
 export type Profession = 'Doc' | 'Nrs' | 'AsPr' | 'Supp';
