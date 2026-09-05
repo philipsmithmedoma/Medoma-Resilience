@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useStore } from '@/data/store';
-import { CC, LABELS, REGION_ID } from '@/data/vocab';
+import { CC, LABELS } from '@/data/vocab';
 import { isRegion, scopeName } from '@/lib/scope';
 import { sourcesForScope } from '@/lib/figure';
 import { PageTitle, SectionHeading } from '@/components/PageTitle';
@@ -135,7 +135,6 @@ export function CommandCenterPage() {
       )}
 
       <LogDrawer open={logOpen} onOpenChange={setLogOpen} entries={log} />
-      {scope === REGION_ID ? null : null}
     </div>
   );
 }

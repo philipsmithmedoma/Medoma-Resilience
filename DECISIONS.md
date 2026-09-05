@@ -112,3 +112,43 @@ Spec: SPEC.md § 5.4, § 6.1.2
 Decision: Nodes other than Vikby get the capabilities listed in § 5.3 as their own What-limits-what entries (Sjöberga: Acute beds, Intensive care; Ekhaga: Monitored intake; Fältsjukhus Alfa: Field beds). Hemsjukvård Sollentuna has none and shows "No capability data at this node." Ekhaga's Monitored intake unit is "monitored patients can be received".
 Rejected: Showing Vikby's capabilities at every node – wrong figures.
 Spec: SPEC.md § 5.3, § 6.1.3
+
+## 2026-09-04 – Batch 3 – Channel member roles
+Decision: The Incident command channel has every role of the playbook as members. Any other channel has the Incident commander plus the owner roles of the tasks whose area name appears in the channel name (so "Emergency department" → Medical lead and Intensive care lead; "IT and wards" → IT liaison and Ward runners lead). This is what the "Channel opened at HH:MM for {member roles}" system message lists.
+Rejected: A hand-written member list per channel – more data to maintain for the same result.
+Spec: SPEC.md § 3 (Channel), § 6.2.3
+
+## 2026-09-04 – Batch 3 – Audit wording for actions the spec does not name
+Decision: Assigning a task logs "Assigned task – {title} – {person}"; changing a role logs "Changed role – {role} – {person}" (changing Incident commander also updates the banner); "Clear suggestions" logs one entry "Clear suggestions" with the number rejected in the detail rather than one entry per patient; the suggestion entry "Suggested moves – {n} patients" is attributed to System because it is the system's proposal, while every acceptance is logged as an authorisation by Eva Lind.
+Rejected: One "Rejected suggested move" entry per patient for Clear suggestions – up to 32 identical lines in the log.
+Spec: SPEC.md § 6.2.3, § 6.3, § 7.4
+
+## 2026-09-04 – Batch 3 – Close time and the incident's log slice
+Decision: The closed incident's `closedAt` is the clock at the moment "Closed incident" is logged, and its log slice runs from the "Activated incident" entry to the "Closed incident" entry inclusive (everything logged during the incident, from any module). Activation is logged before the System entries for tasks and channels so that the slice starts with it.
+Rejected: Filtering the slice to incident-module entries only – evacuation moves made during the incident are part of its story.
+Spec: SPEC.md § 6.2.5
+
+## 2026-09-04 – Batch 3 – Summary counts and status filter mapping
+Decision: On the Evacuation summary row, "Planned" counts accepted plans in status Planned only (suggested plans are not counts until authorised); the Status filter maps "Not planned" to patients without a plan or with an unaccepted suggestion, "Planned" to Planned and Accepted, "In transit" to Transport assigned and Departed, "Arrived" to Arrived and Handed over.
+Rejected: Counting suggestions as planned – would contradict "suggestions do not take any counts until accepted".
+Spec: SPEC.md § 6.3
+
+## 2026-09-04 – Batch 3 – Free counts decrement verified first
+Decision: When a plan takes a bed, place or intensive care bed, the Figure's value decreases by one and the verified part is consumed first; the estimated part only when no verified beds remain. Cancelling adds the bed back as verified.
+Rejected: Proportional split – needless arithmetic for a demo figure.
+Spec: SPEC.md § 6.3 rules, § 7.1
+
+## 2026-09-04 – Batch 3 – Transport selection is inline
+Decision: At the Accepted step the plan panel shows the vehicle select directly, with "{name}: {available} available" per option and incompatible or exhausted vehicles disabled with the reason; the primary "Assign transport" button is enabled once a vehicle is chosen. The destination select in "Plan move" works the same way (disabled options carry the reason).
+Rejected: A separate dialog for the vehicle – an extra click in a 320 px pane that has room for the select.
+Spec: SPEC.md § 6.3, § 7.5
+
+## 2026-09-04 – Batch 3 – Target progress and Evacuation target line
+Decision: Target rows show "{current} / {target} {unit}, due HH:MM" with a progress bar clamped at 100 %. The Evacuation summary shows "Target: free 30 acute beds" followed by "{n} freed" in secondary text so the presenter sees the current value without opening the incident.
+Rejected: Showing only the target – the number that changes as patients depart is the point of the demo.
+Spec: SPEC.md § 3, § 6.2.3, § 6.3
+
+## 2026-09-04 – Batch 3 – Map behaviour in the prototype
+Decision: The map fits all nodes on load and re-fits when a node is added; scroll-wheel zoom is off so that scrolling the page does not zoom the map; markers show the node name on hover and name plus free places in the popup. Level chip on the active incident header is grey ("Level 2"); the "Active" chip is blue.
+Rejected: Scroll-wheel zoom – hijacks page scrolling in the three-pane layout.
+Spec: DESIGN.md § 4 Maps, SPEC.md § 6.2.3

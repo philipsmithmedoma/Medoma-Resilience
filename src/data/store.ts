@@ -30,6 +30,8 @@ import {
 } from './mock';
 import { AUDIT, CURRENT_USER, HOME_NODE_ID, SYSTEM_ACTOR } from './vocab';
 import { formatClock, INITIAL_CLOCK } from '@/lib/time';
+import { createIncidentSlice, type IncidentActions } from './store-incident';
+import { createEvacuationSlice, type EvacuationActions } from './store-evacuation';
 
 export interface DataState {
   scope: NodeId;
@@ -64,7 +66,7 @@ export interface Actions {
   reset: () => void;
 }
 
-export type AppStore = DataState & Actions;
+export type AppStore = DataState & Actions & IncidentActions & EvacuationActions;
 
 function clone<T>(value: T): T {
   return structuredClone(value);
@@ -93,8 +95,10 @@ export function initialData(): DataState {
   };
 }
 
-export const useStore = create<AppStore>()((set, get) => ({
+export const useStore = create<AppStore>()((set, get, api) => ({
   ...initialData(),
+  ...createIncidentSlice(set, get, api),
+  ...createEvacuationSlice(set, get, api),
 
   nextId: (prefix) => {
     const n = get().ids + 1;
